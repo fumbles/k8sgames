@@ -1,0 +1,98 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+metadata:
+  annotations:
+    alm-examples: '[]'
+    capabilities: Basic Install
+    categories: Developer Tools
+    containerImage: docker.io/fumbles/k8sgames:v0.1.1
+    repository: https://github.com/rohitg00/k8sgames
+    support: k8sgames Community
+  name: k8sgames.v0.1.1
+  namespace: placeholder
+spec:
+  displayName: K8s Games
+  description: |
+    Kubernetes scenario simulator — learn Kubernetes concepts through
+    interactive gameplay. Runs as a static web application served by nginx.
+  replaces: k8sgames.v0.1.0
+  version: 0.1.1
+  maturity: alpha
+  provider:
+    name: rohitg00
+    url: https://github.com/rohitg00/k8sgames
+  links:
+    - name: GitHub (upstream)
+      url: https://github.com/rohitg00/k8sgames
+    - name: GitHub (operator)
+      url: https://github.com/fumbles/k8sgames
+  keywords:
+    - kubernetes
+    - games
+    - education
+    - simulator
+  maintainers:
+    - name: rohitg00
+      email: ''
+  icon:
+    - base64data: PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTQiIGZpbGw9IiMzMjZDRTUiLz48dGV4dCB4PSIxNiIgeT0iMjEiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iYm9sZCI+SzwvdGV4dD48L3N2Zz4=
+      mediatype: image/svg+xml
+  installModes:
+    - type: OwnNamespace
+      supported: true
+    - type: SingleNamespace
+      supported: true
+    - type: MultiNamespace
+      supported: false
+    - type: AllNamespaces
+      supported: false
+  install:
+    strategy: deployment
+    spec:
+      deployments:
+        - name: k8sgames
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                app: k8sgames
+            template:
+              metadata:
+                labels:
+                  app: k8sgames
+              spec:
+                containers:
+                  - name: k8sgames
+                    image: docker.io/fumbles/k8sgames:v0.1.1
+                    ports:
+                      - containerPort: 8080
+                        protocol: TCP
+                    resources:
+                      requests:
+                        cpu: 50m
+                        memory: 64Mi
+                      limits:
+                        cpu: 200m
+                        memory: 128Mi
+                    securityContext:
+                      allowPrivilegeEscalation: false
+                      runAsNonRoot: true
+                      seccompProfile:
+                        type: RuntimeDefault
+                      capabilities:
+                        drop:
+                          - ALL
+                    readinessProbe:
+                      httpGet:
+                        path: /
+                        port: 8080
+                      initialDelaySeconds: 5
+                      periodSeconds: 10
+                    livenessProbe:
+                      httpGet:
+                        path: /
+                        port: 8080
+                      initialDelaySeconds: 15
+                      periodSeconds: 20
+                securityContext:
+                  runAsNonRoot: true
