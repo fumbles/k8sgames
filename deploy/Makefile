@@ -100,8 +100,14 @@ catalog: opm ## Generate file-based catalog under catalog/ from the pushed bundl
 	rm -rf catalog && mkdir -p catalog
 	$(OPM) init k8sgames --default-channel=$(DEFAULT_CHANNEL) --output yaml > catalog/k8sgames-catalog.yaml
 	$(OPM) render $(BUNDLE_IMG) --output yaml >> catalog/k8sgames-catalog.yaml
-	@printf -- "---\nschema: olm.channel\npackage: k8sgames\nname: $(DEFAULT_CHANNEL)\nentries:\n- name: k8sgames.v$(VERSION)\n" \
-		>> catalog/k8sgames-catalog.yaml
+	@REPLACES=$$(grep '^  replaces:' bundle/manifests/k8sgames.clusterserviceversion.yaml | awk '{print $$2}'); \
+	if [ -n "$$REPLACES" ]; then \
+		printf -- "---\nschema: olm.channel\npackage: k8sgames\nname: $(DEFAULT_CHANNEL)\nentries:\n- name: k8sgames.v$(VERSION)\n  replaces: $$REPLACES\n" \
+			>> catalog/k8sgames-catalog.yaml; \
+	else \
+		printf -- "---\nschema: olm.channel\npackage: k8sgames\nname: $(DEFAULT_CHANNEL)\nentries:\n- name: k8sgames.v$(VERSION)\n" \
+			>> catalog/k8sgames-catalog.yaml; \
+	fi
 
 .PHONY: catalog-build
 catalog-build: catalog ## Build catalog image locally.
