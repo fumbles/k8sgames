@@ -1,5 +1,11 @@
 # k8sgames — OLM Deployment
 
+[![Docker Pulls](https://img.shields.io/docker/pulls/fumbles/k8sgames?logo=docker&label=app%20pulls)](https://hub.docker.com/r/fumbles/k8sgames)
+[![Docker Pulls](https://img.shields.io/docker/pulls/fumbles/k8sgames-bundle?logo=docker&label=bundle%20pulls)](https://hub.docker.com/r/fumbles/k8sgames-bundle)
+[![Docker Pulls](https://img.shields.io/docker/pulls/fumbles/k8sgames-catalog?logo=docker&label=catalog%20pulls)](https://hub.docker.com/r/fumbles/k8sgames-catalog)
+[![Docker Image Version](https://img.shields.io/docker/v/fumbles/k8sgames?sort=semver&logo=docker&label=version)](https://hub.docker.com/r/fumbles/k8sgames)
+[![App Showcase](https://img.shields.io/badge/Upstream-rohitg00%2Fk8sgames-326CE5?logo=github&logoColor=white)](https://github.com/rohitg00/k8sgames)
+
 This directory packages the upstream [k8sgames](https://github.com/rohitg00/k8sgames) static web app as an OLM-managed workload so it can be installed, upgraded, and kept in sync with upstream via a standard OpenShift Subscription.
 
 No files in the parent directory are modified — the upstream simulator is pulled at image build time.
